@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { collection, addDoc, getDocs, deleteDoc, doc, updateDoc } from 'firebase/firestore';
-import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
-import { db, storage } from '../lib/firebase';
+import { db } from '../lib/firebase';
 import { Plus, Edit, Trash } from 'lucide-react';
 import { base_image_url, categories } from '../types/product';
 import { ToastContainer, toast } from 'react-toastify';
@@ -16,7 +15,7 @@ export function AdminPage() {
     category: categories[0].id.toString(),
     price: '',
     image: base_image_url,
-  }); 
+  });
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
   const [productToDelete, setProductToDelete] = useState<string | null>(null);
@@ -37,14 +36,12 @@ export function AdminPage() {
     setLoading(true);
 
     try {
-      let imageUrl = base_image_url;
-
       await addDoc(collection(db, 'products'), {
         title: formData.title,
         description: formData.description,
         category: formData.category,
         price: parseFloat(formData.price),
-        imageUrl,
+        imageUrl: formData.image,
         createdAt: new Date(),
       });
 
@@ -142,7 +139,7 @@ export function AdminPage() {
               <input
                 type="text"
                 required
-                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-purple-500 focus:ring-purple-500"
+                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-purple-500 focus:ring-purple-500 transition duration-150 ease-in-out"
                 value={formData.title}
                 onChange={(e) => setFormData({ ...formData, title: e.target.value })}
               />
@@ -155,7 +152,7 @@ export function AdminPage() {
               <textarea
                 required
                 rows={3}
-                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-purple-500 focus:ring-purple-500"
+                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-purple-500 focus:ring-purple-500 transition duration-150 ease-in-out"
                 value={formData.description}
                 onChange={(e) => setFormData({ ...formData, description: e.target.value })}
               />
@@ -167,7 +164,7 @@ export function AdminPage() {
               </label>
               <select
                 required
-                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-purple-500 focus:ring-purple-500"
+                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-purple-500 focus:ring-purple-500 transition duration-150 ease-in-out"
                 value={formData.category}
                 onChange={(e) => setFormData({ ...formData, category: e.target.value })}
               >
@@ -187,7 +184,7 @@ export function AdminPage() {
                 type="number"
                 step="0.01"
                 required
-                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-purple-500 focus:ring-purple-500"
+                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-purple-500 focus:ring-purple-500 transition duration-150 ease-in-out"
                 value={formData.price}
                 onChange={(e) => setFormData({ ...formData, price: e.target.value })}
               />
@@ -195,21 +192,21 @@ export function AdminPage() {
 
             <div>
               <label className="block text-sm font-medium text-gray-700">
-                Image du Produit
+                URL de l'image du Produit
               </label>
               <input
-                type="file"
-                accept="image/*"
+                type="url"
                 required
-                className="mt-1 block w-full"
-                onChange={(e) => setFormData({ ...formData, image: e.target.files?.[0] || null })}
+                className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-purple-500 focus:ring-purple-500 transition duration-150 ease-in-out"
+                value={formData.image}
+                onChange={(e) => setFormData({ ...formData, image: e.target.value })}
               />
             </div>
 
             <button
               type="submit"
               disabled={loading}
-              className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-purple-600 hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500 disabled:opacity-50"
+              className="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-purple-600 hover:bg-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500 disabled:opacity-50 transition duration-150 ease-in-out"
             >
               {loading ? 'Ajout en cours...' : 'Ajouter le Produit'}
             </button>
@@ -284,7 +281,7 @@ export function AdminPage() {
                 <input
                   type="text"
                   required
-                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-purple-500 focus:ring-purple-500"
+                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-purple-500 focus:ring-purple-500 transition duration-150 ease-in-out"
                   value={productToEdit.title}
                   onChange={(e) => setProductToEdit({ ...productToEdit, title: e.target.value })}
                 />
@@ -297,7 +294,7 @@ export function AdminPage() {
                 <textarea
                   required
                   rows={3}
-                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-purple-500 focus:ring-purple-500"
+                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-purple-500 focus:ring-purple-500 transition duration-150 ease-in-out"
                   value={productToEdit.description}
                   onChange={(e) => setProductToEdit({ ...productToEdit, description: e.target.value })}
                 />
@@ -309,7 +306,7 @@ export function AdminPage() {
                 </label>
                 <select
                   required
-                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-purple-500 focus:ring-purple-500"
+                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-purple-500 focus:ring-purple-500 transition duration-150 ease-in-out"
                   value={productToEdit.category}
                   onChange={(e) => setProductToEdit({ ...productToEdit, category: e.target.value })}
                 >
@@ -329,7 +326,7 @@ export function AdminPage() {
                   type="number"
                   step="0.01"
                   required
-                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-purple-500 focus:ring-purple-500"
+                  className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-purple-500 focus:ring-purple-500 transition duration-150 ease-in-out"
                   value={productToEdit.price}
                   onChange={(e) => setProductToEdit({ ...productToEdit, price: e.target.value })}
                 />
@@ -357,3 +354,5 @@ export function AdminPage() {
     </div>
   );
 }
+
+export default AdminPage;
