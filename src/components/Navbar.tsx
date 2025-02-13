@@ -23,7 +23,7 @@ export function Navbar() {
               className="flex items-center space-x-2 text-gray-700 hover:text-primary-600 transition-colors"
             >
               <ShoppingBag className="h-5 w-5" />
-              <span>Nos Produits</span>
+              <span>Catalogue</span>
             </Link>
           </div>
           
@@ -49,7 +49,7 @@ export function Navbar() {
                 to="/login" 
                 className="text-sm font-medium text-gray-700 hover:text-primary-600"
               >
-                Connexion Admin
+                Connexion
               </Link>
             )}
           </div>
